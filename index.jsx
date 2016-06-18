@@ -5,6 +5,7 @@ import firebase from 'firebase';
 import ReactFireMixin from 'reactfire';
 import { autobind } from 'core-decorators';
 import reactMixin from 'react-mixin';
+import YouTube from 'react-youtube';
 import { Router, Route, Link, browserHistory } from 'react-router';
 
 firebase.initializeApp({
@@ -13,6 +14,12 @@ firebase.initializeApp({
   databaseURL: 'https://karaoke-46318.firebaseio.com',
   storageBucket: '',
 });
+
+const youtubeParser = (url) => {
+  const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[7].length === 11) ? match[7] : false;
+};
 
 @reactMixin.decorate(ReactFireMixin)
 export class App extends Component {
@@ -34,17 +41,18 @@ export class App extends Component {
 
   render() {
     const { songs } = this.state;
+    const videoId = songs.length > 0 ? youtubeParser(songs[0].url) : null;
 
     return (
       <div>
         <input ref={(c) => this._input = c} />
         <button onClick={this.addVideo}></button>
-        <div>Simple React + Babel + Bootstrap + Webpack</div>
+        { videoId ? <YouTube videoId={videoId} /> : null }
         <ol>
           {
             songs.map((song) => (
               <li key={song['.key']}>
-                <a href={song.url}>{songs.url}</a>
+                <a href={song.url}>{song.url}</a>
               </li>
             ))
           }
@@ -58,4 +66,5 @@ ReactDOM.render(
   <Router history={browserHistory}>
     <Route path="/" component={App} />
   </Router>,
-  document.querySelector('#myApp'));
+  document.querySelector('#myApp')
+);
