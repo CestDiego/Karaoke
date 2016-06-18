@@ -42,9 +42,9 @@ export class App extends Component {
         <div>Simple React + Babel + Bootstrap + Webpack</div>
         <ol>
           {
-            songs.map(({ url }) => (
-              <li>
-                <a href={url}>{url}</a>
+            songs.map((song) => (
+              <li key={song['.key']}>
+                <a href={song.url}>{songs.url}</a>
               </li>
             ))
           }
