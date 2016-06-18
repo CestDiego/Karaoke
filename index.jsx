@@ -1,8 +1,9 @@
 import './node_modules/bootstrap/dist/css/bootstrap.min.css';
-import firebase from 'firebase';
-import ReactFireMixin from 'reactfire';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import firebase from 'firebase';
+import ReactFireMixin from 'reactfire';
+import { Router, Route, Link, browserHistory } from 'react-router';
 
 firebase.initializeApp({
   apiKey: 'AIzaSyAdlrCx_Rat0KoxYVO1PyCceQcvy9TgK30',
@@ -21,4 +22,8 @@ export class App extends React.Component {
   }
 }
 
-ReactDOM.render(<App />, document.querySelector('#myApp'));
+ReactDOM.render(
+  <Router history={browserHistory}>
+    <Route path="/" component={App} />
+  </Router>,
+  document.querySelector('#myApp'));
