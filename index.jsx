@@ -1,8 +1,9 @@
 import './node_modules/bootstrap/dist/css/bootstrap.min.css';
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import firebase from 'firebase';
 import ReactFireMixin from 'reactfire';
+import { autobind } from 'core-decorators';
 import { Router, Route, Link, browserHistory } from 'react-router';
 
 firebase.initializeApp({
@@ -12,12 +13,21 @@ firebase.initializeApp({
   storageBucket: '',
 });
 
-export class App extends React.Component {
+export class App extends Component {
   mixins: [ReactFireMixin]
+
+  @autobind
+  addVideo() {
+    console.log(this._input.value);
+  }
 
   render() {
     return (
-      <div>Simple React + Babel + Bootstrap + Webpack</div>
+      <div>
+        <input ref={(c) => this._input = c} />
+        <button onClick={this.addVideo}></button>
+        <div>Simple React + Babel + Bootstrap + Webpack</div>
+      </div>
     );
   }
 }
