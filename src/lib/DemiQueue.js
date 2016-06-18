@@ -1,20 +1,46 @@
-import Immutable from 'immutable'
+import Immutable from 'immutable';
 
-let DemiQueue = Immutable.Map({})
+var queue = Immutable.List();
 
-let vote = (queue, url) {
+var vote = (queue, url) => {
 
 }
 
-let addEntity = (queue, url) {
-  if(queue.get(url) !== undefined) {
+var dequeue = (queue) => {
+  if (queue.size === 1) {
+    // TODO: Handle empty queue
+  }
+
+  return queue.shift();
+}
+
+var getCurrentSong = queue => queue.first()
+
+var updateFirstSongToBeCurrent = queue =>
+  queue.update(0, song =>
+    song.set('isCurrent', true))
+
+var nextSong = queue =>
+  updateFirstSongToBeCurrent(dequeue(queue));
+
+var queueHasUrl = (queue, url) =>
+  queue.find(song =>
+    song.get('url') === url)
+
+var addSong = (queue, url) => {
+  if(queueHasUrl(queue, url) !== undefined) {
     // TODO: Cannot repeat song, what do
   }
 
-  return queue.set(url, {
+  var newSong = Immutable.Map({
     url: url,
-    isCurrent: false,
     votes: 0,
-    order: Object.keys(queue.toJS()).length,
-  })
+    isCurrent: queue.size == 0 ? true : false,
+    order: queue.size + 1,
+  });
+  return queue.push(newSong);
 }
+
+var urls = ['first', 'second', 'thirdPopular']
+
+var newQueue = urls.reduce((q, url) => addSong(q, url), queue)
