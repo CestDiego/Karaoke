@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import firebase from 'firebase';
 import ReactFireMixin from 'reactfire';
 import { autobind } from 'core-decorators';
+import reactMixin from 'react-mixin';
 import { Router, Route, Link, browserHistory } from 'react-router';
 
 firebase.initializeApp({
@@ -13,12 +14,18 @@ firebase.initializeApp({
   storageBucket: '',
 });
 
+@reactMixin.decorate(ReactFireMixin)
 export class App extends Component {
-  mixins: [ReactFireMixin]
+  componentWillMount() {
+    const ref = firebase.database().ref('songs');
+    this.bindAsArray(ref, 'songs');
+  }
 
   @autobind
   addVideo() {
-    console.log(this._input.value);
+    const url = this._input.value;
+    this.firebaseRefs.songs.push({ url });
+    this.setState({ url });
   }
 
   render() {
