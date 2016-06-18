@@ -23,17 +23,32 @@ export class App extends Component {
 
   @autobind
   addVideo() {
+    const { songs } = this.state;
     const url = this._input.value;
+
     this.firebaseRefs.songs.push({ url });
-    this.setState({ url });
+
+    songs.push(url);
+    this.setState({ songs });
   }
 
   render() {
+    const { songs } = this.state;
+
     return (
       <div>
         <input ref={(c) => this._input = c} />
         <button onClick={this.addVideo}></button>
         <div>Simple React + Babel + Bootstrap + Webpack</div>
+        <ol>
+          {
+            songs.map(({ url }) => (
+              <li>
+                <a href={url}>{url}</a>
+              </li>
+            ))
+          }
+        </ol>
       </div>
     );
   }
